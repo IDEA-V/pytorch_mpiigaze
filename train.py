@@ -156,9 +156,9 @@ def main():
                                 save_to_disk=True)
     tensorboard_writer = create_tensorboard_writer(config, output_dir)
 
-    if config.train.val_first:
-        validate(0, model, loss_function, val_loader, config,
-                 tensorboard_writer, logger)
+    # if config.train.val_first:
+    #     validate(0, model, loss_function, val_loader, config,
+    #              tensorboard_writer, logger)
 
     for epoch in range(1, config.scheduler.epochs + 1):
         train(epoch, model, optimizer, scheduler, loss_function, train_loader,
@@ -171,8 +171,9 @@ def main():
 
         if (epoch % config.train.checkpoint_period == 0
                 or epoch == config.scheduler.epochs):
-            checkpoint_config = {'epoch': epoch, 'config': config.as_dict()}
-            checkpointer.save(f'checkpoint_{epoch:04d}', **checkpoint_config)
+            torch.save(model, './gazeEstimater.zip')
+            # checkpoint_config = {'epoch': epoch, 'config': config.as_dict()}
+            # checkpointer.save(f'checkpoint_{epoch:04d}', **checkpoint_config)
 
     tensorboard_writer.close()
 

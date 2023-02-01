@@ -4,7 +4,7 @@ dataset:
   dataset_dir: datasets/MPIIFaceGaze.h5
 transform:
   mpiifacegaze_face_size: 448
-  mpiifacegaze_gray: False
+  mpiifacegaze_gray: True
 model:
   name: alexnet
 train:

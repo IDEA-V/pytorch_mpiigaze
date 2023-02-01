@@ -13,12 +13,12 @@ def initialize_weights(module: torch.nn.Module) -> None:
 
 
 class Model(nn.Module):
-    def __init__(self, config: yacs.config.CfgNode):
+    def __init__(self, config):
         super().__init__()
 
         self.conv1 = nn.Conv2d(1, 20, kernel_size=5, stride=1, padding=0)
         self.conv2 = nn.Conv2d(20, 50, kernel_size=5, stride=1, padding=0)
-        self.fc1 = nn.Linear(3600, 500)
+        self.fc1 = nn.Linear(8450, 500)
         self.fc2 = nn.Linear(502, 2)
 
         self._initialize_weight()

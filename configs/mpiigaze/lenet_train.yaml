@@ -27,7 +27,7 @@ train:
     num_workers: 4
     pin_memory: False
 scheduler:
-  epochs: 10
+  epochs: 20
   type: multistep
   milestones: [8, 9]
   lr_decay: 0.1

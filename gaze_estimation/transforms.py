@@ -20,35 +20,36 @@ def create_transform(config: yacs.config.CfgNode) -> Any:
 
 def _create_mpiigaze_transform(config: yacs.config.CfgNode) -> Any:
     scale = torchvision.transforms.Lambda(lambda x: x.astype(np.float32) / 255)
-    transform = torchvision.transforms.Compose([
-        scale,
-        torch.from_numpy,
-        torchvision.transforms.Lambda(lambda x: x[None, :, :]),
-    ])
-    return transform
+    # transform = torchvision.transforms.Compose([
+    #     scale,
+    #     torch.from_numpy,
+    #     torchvision.transforms.Lambda(lambda x: x[None, :, :]),
+    # ])
+    proc = []
+    proc.append(torchvision.transforms.ToPILImage())
+    proc.append(torchvision.transforms.Resize((64, 64)))
+    proc.append(torchvision.transforms.ToTensor())
+    # proc.append(_index)
+        
+    return torchvision.transforms.Compose(proc)
 
+def _scale(x):
+    return x.astype(np.float32) / 255
+
+def _to_gray(x):
+    return cv2.cvtColor(
+            cv2.equalizeHist(cv2.cvtColor(x, cv2.COLOR_BGR2GRAY)), cv2.
+            COLOR_GRAY2BGR)
+
+def _transpose(x):
+    return x.transpose(2, 0, 1)
 
 def _create_mpiifacegaze_transform(config: yacs.config.CfgNode) -> Any:
-    scale = torchvision.transforms.Lambda(lambda x: x.astype(np.float32) / 255)
-    identity = torchvision.transforms.Lambda(lambda x: x)
-    size = config.transform.mpiifacegaze_face_size
-    if size != 448:
-        resize = torchvision.transforms.Lambda(
-            lambda x: cv2.resize(x, (size, size)))
-    else:
-        resize = identity
-    if config.transform.mpiifacegaze_gray:
-        to_gray = torchvision.transforms.Lambda(lambda x: cv2.cvtColor(
-            cv2.equalizeHist(cv2.cvtColor(x, cv2.COLOR_BGR2GRAY)), cv2.
-            COLOR_GRAY2BGR))
-    else:
-        to_gray = identity
 
     transform = torchvision.transforms.Compose([
-        resize,
-        to_gray,
-        torchvision.transforms.Lambda(lambda x: x.transpose(2, 0, 1)),
-        scale,
+        _to_gray,
+        _transpose,
+        _scale,
         torch.from_numpy,
         torchvision.transforms.Normalize(mean=[0.406, 0.456, 0.485],
                                          std=[0.225, 0.224, 0.229]),

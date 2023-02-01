@@ -109,7 +109,7 @@ def main():
 
     output_dir = pathlib.Path(args.output_dir)
     output_dir.mkdir(exist_ok=True, parents=True)
-    output_path = output_dir / 'MPIIGaze.h5'
+    output_path = output_dir / 'MPIIGaze1.h5'
     if output_path.exists():
         raise ValueError(f'{output_path} already exists.')
 
